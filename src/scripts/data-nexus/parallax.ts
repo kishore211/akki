@@ -12,35 +12,58 @@ const getDocumentProgress = () => {
 
 const noop = () => undefined;
 
-const setSectionDepth = (section: HTMLElement, progress: number) => {
-  const t = clamp(progress);
-  // Distance from the centered "hold" point. 0 at center, 1 at edges.
-  const rawCenterDist = Math.abs(t - 0.5) * 2;
-  // Smoothstep with a small flat hold zone near the center so the section
-  // feels like it locks in place before sliding away.
-  const holdZone = 0.18;
-  const past = Math.max(0, rawCenterDist - holdZone) / (1 - holdZone);
-  const fade = easeOutCubic(past);
-  const focus = 1 - fade;
+const setSectionDepth = (section: HTMLElement) => {
+  const rect = section.getBoundingClientRect();
+  const vh = window.innerHeight;
+  const sectionHeight = rect.height;
 
-  // Dramatic shrink/scale band: 0.84 entering/exiting → 1.02 at hold.
-  const scale = 0.84 + focus * 0.18;
-  // Slide direction: positive lift entering from below, negative on exit.
-  const direction = t < 0.5 ? 1 : -1;
-  const lift = Math.round(direction * fade * 60);
-  const opacity = (0.35 + focus * 0.65).toFixed(3);
-  const blur = (fade * (t < 0.5 ? 4 : 6)).toFixed(2);
+  let entry = 0;
+  let hold = 0;
+  let exit = 0;
+
+  if (rect.top > vh / 2) {
+    entry = clamp((vh - rect.top) / (vh / 2));
+  } else if (rect.bottom < vh / 2) {
+    exit = clamp((vh / 2 - rect.bottom) / (vh / 2));
+  } else {
+    hold = 1;
+  }
+
+  let scale = 1.02;
+  let lift = 0;
+  let opacity = 1;
+  let blur = 0;
+
+  if (hold === 1) {
+    scale = 1.02;
+    lift = 0;
+    opacity = 1;
+    blur = 0;
+  } else if (rect.top > vh / 2) {
+    scale = 0.84 + entry * 0.18;
+    lift = 60 - entry * 60;
+    opacity = 0.35 + entry * 0.65;
+    blur = 4 - entry * 4;
+  } else {
+    scale = 1.02 - exit * 0.16;
+    lift = -exit * 60;
+    opacity = 1 - exit * 0.6;
+    blur = exit * 6;
+  }
+
+  const t = clamp((vh - rect.top) / (vh + sectionHeight));
   const ribbonShift = Math.round((t - 0.5) * 120);
 
   section.style.setProperty('--section-progress', t.toFixed(3));
-  section.style.setProperty('--section-focus', focus.toFixed(3));
-  section.style.setProperty('--section-lift', `${lift}px`);
+  section.style.setProperty('--section-focus', hold.toFixed(3));
+  section.style.setProperty('--section-lift', `${lift.toFixed(1)}px`);
   section.style.setProperty('--section-scale', scale.toFixed(3));
-  section.style.setProperty('--section-opacity', opacity);
-  section.style.setProperty('--section-blur', `${blur}px`);
+  section.style.setProperty('--section-opacity', opacity.toFixed(3));
+  section.style.setProperty('--section-blur', `${blur.toFixed(1)}px`);
   section.style.setProperty('--section-ribbon-shift', `${ribbonShift}px`);
-  section.classList.toggle('is-entering', t < 0.5 && fade > 0.02);
-  section.classList.toggle('is-exiting', t > 0.5 && fade > 0.02);
+
+  section.classList.toggle('is-entering', rect.top > vh / 2 && entry < 0.98);
+  section.classList.toggle('is-exiting', rect.bottom < vh / 2 && exit > 0.02);
 };
 
 const getSectionDetail = (section: HTMLElement) => ({
@@ -423,6 +446,7 @@ export const initDataNexusParallax = async () => {
   const cleanupCountups = initHeroMetricCountups();
   const cleanupHeroField = initHeroField(prefersReducedMotion);
   const cleanupBaselineSources = initBaselineSources();
+  let cleanupFallback = noop;
 
   if (!prefersReducedMotion) {
     const [{ gsap }, { ScrollTrigger }] = await Promise.all([import('gsap'), import('gsap/ScrollTrigger')]);
@@ -434,9 +458,7 @@ export const initDataNexusParallax = async () => {
         start: 'top bottom',
         end: 'bottom top',
         scrub: true,
-        onUpdate: (self) => {
-          setSectionDepth(section, self.progress);
-        },
+        onUpdate: () => setSectionDepth(section),
       });
     });
 
@@ -534,6 +556,23 @@ export const initDataNexusParallax = async () => {
         }
       );
     });
+  } else {
+    let fallbackRaf = 0;
+    const updateFallback = () => {
+      sections.forEach(setSectionDepth);
+      fallbackRaf = 0;
+    };
+    const onScrollFallback = () => {
+      if (!fallbackRaf) fallbackRaf = window.requestAnimationFrame(updateFallback);
+    };
+    window.addEventListener('scroll', onScrollFallback, { passive: true });
+    updateFallback();
+
+    // Assign to local cleanup function
+    cleanupFallback = () => {
+      window.removeEventListener('scroll', onScrollFallback);
+      if (fallbackRaf) window.cancelAnimationFrame(fallbackRaf);
+    };
   }
 
   const observedSections = new Set<string>();
@@ -561,6 +600,7 @@ export const initDataNexusParallax = async () => {
       cleanupHeroField();
       cleanupBaselineSources();
       observer.disconnect();
+      cleanupFallback();
       delete document.documentElement.dataset.nexusParallaxReady;
     },
     { once: true }

@@ -7,19 +7,21 @@ interface Props {
   tone?: 'light' | 'dark';
   chapter?: string;
   stage?: string;
+  label?: string;
 }
 
-const { id, eyebrow, title, subtitle, tone = 'light', chapter = '', stage = '' } = Astro.props;
+const { id, eyebrow, title, subtitle, tone = 'light', chapter = '', stage = '', label } = Astro.props;
+const displayLabel = label || eyebrow.split('·')[0].trim();
 ---
 
 <section
   id={id}
   class:list={[
-    'nexus-section relative overflow-hidden px-4 py-20 sm:px-6 lg:px-8 lg:py-28',
+    'nexus-section relative overflow-hidden px-4 py-20 sm:px-6 lg:px-8 xl:pr-36 lg:py-28',
     tone === 'dark' ? 'bg-slate-950 text-white' : 'bg-slate-50 text-slate-950 dark:bg-slate-950 dark:text-white',
   ]}
   data-nexus-section
-  data-section-label={eyebrow}
+  data-section-label={displayLabel}
   data-section-chapter={chapter}
   data-section-stage={stage}
   data-section-tone={tone}
