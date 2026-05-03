@@ -22,6 +22,42 @@ export const initDataNexusParallax = async () => {
         },
       });
     });
+
+    document.querySelectorAll<HTMLElement>('[data-evolution-slider]').forEach((slider) => {
+      ScrollTrigger.create({
+        trigger: slider,
+        start: 'top 82%',
+        end: 'bottom 24%',
+        scrub: true,
+        onUpdate: (self) => {
+          slider.dispatchEvent(new CustomEvent('nexus:evolution-scroll', { detail: { progress: self.progress } }));
+        },
+      });
+    });
+
+    document.querySelectorAll<HTMLElement>('[data-nexus-section]').forEach((section) => {
+      const stagedItems = section.querySelectorAll<HTMLElement>(
+        'article, [data-presentation-panel], [data-global-pulse]'
+      );
+      if (stagedItems.length === 0) return;
+
+      gsap.fromTo(
+        stagedItems,
+        { autoAlpha: 0, y: 34 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.72,
+          ease: 'power3.out',
+          stagger: 0.08,
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 72%',
+            once: true,
+          },
+        }
+      );
+    });
   }
 
   const observedSections = new Set<string>();

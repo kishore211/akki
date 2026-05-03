@@ -1,66 +1,153 @@
 ---
 const serverFarmImage = 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1800&q=80';
 const edgeGridImage = 'https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=1800&q=80';
+
+const labMetrics = [
+  { label: 'Energy demand', start: 415, end: 1200, unit: ' TWh' },
+  { label: 'Automation', start: 18, end: 90, unit: '%' },
+  { label: 'Edge coverage', start: 12, end: 78, unit: '%' },
+  { label: 'Latency target', start: 420, end: 38, unit: ' ms' },
+];
+
+const hotspots = [
+  {
+    label: 'Batch heat',
+    x: 22,
+    y: 28,
+    trigger: 12,
+    body: 'Centralized training concentrates power, cooling, and queue pressure in a few dense facilities.',
+  },
+  {
+    label: 'CDC stream',
+    x: 44,
+    y: 62,
+    trigger: 40,
+    body: 'Change-data capture and streaming engines turn overnight analytics into a live operational fabric.',
+  },
+  {
+    label: 'Agent planner',
+    x: 66,
+    y: 34,
+    trigger: 66,
+    body: 'Autonomous warehouse agents rebalance indexes, cache, and compute placement before bottlenecks surface.',
+  },
+  {
+    label: 'Edge mesh',
+    x: 82,
+    y: 68,
+    trigger: 88,
+    body: 'Regional edge nodes keep sensitive inference close to users while only proofs and updates travel.',
+  },
+];
 ---
 
 <div
   class="evolution-slider rounded-[2rem] border border-white/10 bg-white/6 p-4 shadow-2xl shadow-black/20 lg:p-6"
   data-evolution-slider
-  style="--position: 52%;"
+  style="--position: 52%; --lab-progress: 0.52;"
 >
-  <div class="grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
-    <div class="slider-frame relative aspect-[16/10] overflow-hidden rounded-[1.5rem] bg-slate-900">
+  <div class="grid gap-6 xl:grid-cols-[1.35fr_0.65fr] xl:items-stretch">
+    <div class="slider-frame relative aspect-[16/10] min-h-[22rem] overflow-hidden rounded-[1.5rem] bg-slate-900">
       <div
         class="slider-layer slider-before"
-        style={`background-image: linear-gradient(120deg, rgba(2,6,23,0.24), rgba(15,23,42,0.74)), url('${serverFarmImage}')`}
+        style={`background-image: linear-gradient(120deg, rgba(2,6,23,0.16), rgba(15,23,42,0.78)), url('${serverFarmImage}')`}
       >
       </div>
       <div
         class="slider-layer slider-after"
-        style={`background-image: linear-gradient(120deg, rgba(13,148,136,0.42), rgba(245,158,11,0.26)), url('${edgeGridImage}')`}
+        style={`background-image: linear-gradient(120deg, rgba(13,148,136,0.32), rgba(245,158,11,0.22)), url('${edgeGridImage}')`}
       >
       </div>
       <div class="slider-grid"></div>
-      <div class="slider-divider" aria-hidden="true">
-        <span></span>
-      </div>
+      <div class="slider-scanline"></div>
+
       <div
-        class="absolute left-4 top-4 rounded-full bg-slate-950/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-200 backdrop-blur"
+        class="absolute left-4 top-4 z-30 rounded-full bg-slate-950/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-200 backdrop-blur"
       >
         2025 server farm
       </div>
       <div
-        class="absolute bottom-4 right-4 rounded-full bg-teal-950/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-teal-100 backdrop-blur"
+        class="absolute bottom-4 right-4 z-30 rounded-full bg-teal-950/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-teal-100 backdrop-blur"
       >
         2035 edge grid
       </div>
+
+      {
+        hotspots.map((hotspot) => (
+          <button
+            type="button"
+            class="slider-hotspot absolute z-40 h-5 w-5 rounded-full border border-white/70 bg-amber-300 shadow-[0_0_34px_rgba(251,191,36,0.65)] transition hover:scale-125 focus:scale-125 focus:outline-none focus:ring-2 focus:ring-white"
+            style={`left: ${hotspot.x}%; top: ${hotspot.y}%;`}
+            data-hotspot
+            data-trigger={hotspot.trigger}
+            data-hotspot-label={hotspot.label}
+            data-hotspot-body={hotspot.body}
+            aria-label={`Inspect ${hotspot.label}`}
+          >
+            <span class="absolute left-1/2 top-1/2 h-9 w-9 -translate-x-1/2 -translate-y-1/2 rounded-full border border-amber-200/60" />
+          </button>
+        ))
+      }
+
+      <div class="slider-divider" aria-hidden="true">
+        <span>
+          <strong data-evolution-readout>52%</strong>
+        </span>
+      </div>
+
+      <div
+        class="pointer-events-none absolute inset-x-6 bottom-16 z-30 grid grid-cols-3 gap-2 text-center text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-white/70"
+      >
+        <span>2025</span>
+        <span>2030</span>
+        <span>2035</span>
+      </div>
+
       <input
         class="slider-input"
         type="range"
         min="0"
         max="100"
         value="52"
-        aria-label="Compare the current server farm with the 2035 edge grid"
+        aria-label="Compare centralized server farms with the 2035 edge grid"
         data-evolution-slider-input
       />
     </div>
 
-    <article>
-      <p class="text-sm font-semibold uppercase tracking-[0.18em] text-amber-200">Evolution slider</p>
-      <h3 class="mt-3 text-3xl font-bold text-white">From centralized heat to distributed intelligence.</h3>
-      <p class="mt-4 text-base leading-7 text-slate-300">
-        Drag or use the arrow keys to reveal how the 2035 model shifts from dense, energy-constrained data centers
-        toward quantum-assisted orchestration and edge-aware compute.
-      </p>
-      <div class="mt-6 grid gap-3 text-sm text-slate-300">
-        <div class="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
-          <strong class="text-white">Energy paradox:</strong> efficiency gains can still increase total demand when AI workloads
-          multiply.
-        </div>
-        <div class="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
-          <strong class="text-white">Design response:</strong> orchestrate renewable grids, local inference, and workload
-          placement as one system.
-        </div>
+    <article class="grid gap-5 rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5 shadow-xl shadow-black/20">
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-[0.18em] text-amber-200">Transformation lab</p>
+        <h3 class="mt-3 text-3xl font-bold text-white">Scrub the infrastructure shift.</h3>
+        <p class="mt-4 text-base leading-7 text-slate-300">
+          Drag, use arrow keys, or scroll through the section to move from centralized heat to distributed intelligence.
+        </p>
+      </div>
+
+      <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+        {
+          labMetrics.map((metric) => (
+            <div
+              class="lab-metric rounded-2xl border border-white/10 bg-white/6 p-4"
+              data-lab-metric
+              data-start={metric.start}
+              data-end={metric.end}
+              data-unit={metric.unit}
+            >
+              <p class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">{metric.label}</p>
+              <p class="mt-2 text-2xl font-bold text-white" data-lab-metric-value>
+                {metric.start}
+                {metric.unit}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="rounded-2xl border border-amber-300/25 bg-amber-300/10 p-4" data-hotspot-panel aria-live="polite">
+        <p class="text-sm font-bold text-amber-100" data-hotspot-title>Agent planner</p>
+        <p class="mt-2 text-sm leading-6 text-amber-50/80" data-hotspot-body>
+          Autonomous warehouse agents rebalance indexes, cache, and compute placement before bottlenecks surface.
+        </p>
       </div>
     </article>
   </div>
@@ -78,6 +165,7 @@ const edgeGridImage = 'https://images.unsplash.com/photo-1518005020951-eccb494ad
     inset: 0;
     background-position: center;
     background-size: cover;
+    transform: scale(1.03);
   }
 
   .evolution-slider .slider-after {
@@ -92,7 +180,15 @@ const edgeGridImage = 'https://images.unsplash.com/photo-1518005020951-eccb494ad
       linear-gradient(rgb(255 255 255 / 0.1) 1px, transparent 1px);
     background-size: 44px 44px;
     mix-blend-mode: screen;
-    opacity: 0.55;
+    opacity: 0.5;
+  }
+
+  .evolution-slider .slider-scanline {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgb(45 212 191 / 0.18), transparent);
+    opacity: calc(0.2 + var(--lab-progress) * 0.55);
+    transform: translateX(calc((var(--lab-progress) - 0.5) * 40%));
   }
 
   .evolution-slider .slider-divider {
@@ -100,52 +196,52 @@ const edgeGridImage = 'https://images.unsplash.com/photo-1518005020951-eccb494ad
     bottom: 0;
     left: var(--position);
     top: 0;
+    z-index: 25;
     width: 3px;
     transform: translateX(-50%);
-    background: rgb(255 255 255 / 0.88);
+    background: rgb(255 255 255 / 0.9);
+    box-shadow: 0 0 34px rgb(45 212 191 / 0.55);
   }
 
   .evolution-slider .slider-divider span {
     position: absolute;
     left: 50%;
     top: 50%;
-    display: block;
-    height: 3.25rem;
-    width: 3.25rem;
+    display: grid;
+    height: 4rem;
+    width: 4rem;
     transform: translate(-50%, -50%);
+    place-items: center;
     border-radius: 999px;
-    border: 1px solid rgb(255 255 255 / 0.6);
-    background: rgb(15 23 42 / 0.85);
-    box-shadow: 0 20px 60px rgb(0 0 0 / 0.35);
+    border: 1px solid rgb(255 255 255 / 0.64);
+    background: rgb(15 23 42 / 0.9);
+    box-shadow: 0 20px 70px rgb(0 0 0 / 0.38);
   }
 
-  .evolution-slider .slider-divider span::before,
-  .evolution-slider .slider-divider span::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    height: 0.65rem;
-    width: 0.65rem;
-    border-left: 2px solid white;
-    border-bottom: 2px solid white;
-  }
-
-  .evolution-slider .slider-divider span::before {
-    left: 0.95rem;
-    transform: translateY(-50%) rotate(45deg);
-  }
-
-  .evolution-slider .slider-divider span::after {
-    right: 0.95rem;
-    transform: translateY(-50%) rotate(-135deg);
+  .evolution-slider .slider-divider strong {
+    font-size: 0.78rem;
+    color: white;
   }
 
   .evolution-slider .slider-input {
     position: absolute;
     inset: 0;
+    z-index: 35;
     height: 100%;
     width: 100%;
     cursor: ew-resize;
     opacity: 0;
+  }
+
+  .evolution-slider .slider-hotspot.is-active {
+    background: rgb(45 212 191);
+    box-shadow: 0 0 42px rgb(45 212 191 / 0.85);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .evolution-slider .slider-layer,
+    .evolution-slider .slider-hotspot {
+      transition: none;
+    }
   }
 </style>

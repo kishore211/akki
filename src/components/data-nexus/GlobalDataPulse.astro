@@ -7,11 +7,17 @@ import { regionPulses } from '~/data/data-nexus';
   data-global-pulse
 >
   <div class="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-    <div class="relative min-h-[24rem] overflow-hidden rounded-[1.5rem] bg-slate-950">
-      <canvas class="h-full min-h-[24rem] w-full" data-global-pulse-canvas aria-label="Interactive 3D global data pulse"
-      ></canvas>
+    <div class="relative isolate min-h-[28rem] overflow-hidden rounded-[1.5rem] bg-slate-950">
       <div
-        class="absolute inset-0 grid place-items-center bg-slate-950 text-center text-slate-200"
+        class="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(20,184,166,0.2),transparent_42%),linear-gradient(135deg,rgba(15,23,42,0.1),rgba(2,6,23,0.58))]"
+      >
+      </div>
+      <canvas
+        class="absolute inset-0 z-10 h-full w-full touch-none"
+        data-global-pulse-canvas
+        aria-label="Interactive 3D global data pulse"></canvas>
+      <div
+        class="absolute inset-0 z-30 grid place-items-center bg-slate-950 text-center text-slate-200"
         data-global-pulse-loading
       >
         <div>
@@ -20,26 +26,35 @@ import { regionPulses } from '~/data/data-nexus';
         </div>
       </div>
       <div
-        class="pulse-fallback absolute inset-0 hidden place-items-center p-6 text-center text-slate-200"
+        class="pulse-fallback absolute inset-0 z-30 hidden place-items-center p-6 text-slate-200"
         data-global-pulse-fallback
       >
-        <div>
-          <p class="text-lg font-bold">WebGL fallback</p>
-          <p class="mt-2 text-sm leading-6 text-slate-300">
-            Use the regional cards to explore data pressure, infrastructure, and governance signals.
+        <div
+          class="max-w-xl rounded-3xl border border-white/10 bg-slate-950/85 p-6 shadow-2xl shadow-black/30 backdrop-blur"
+        >
+          <p class="text-sm font-semibold uppercase text-teal-200">2D pulse fallback</p>
+          <p class="mt-3 text-2xl font-bold">The regional controls still drive the exhibit.</p>
+          <p class="mt-3 text-sm leading-6 text-slate-300">
+            If WebGL is unavailable, use the pulse cards to inspect the same infrastructure, governance, and privacy
+            pressure signals without losing the story.
           </p>
         </div>
       </div>
       <div
-        class="pulse-tooltip pointer-events-none absolute left-4 top-4 max-w-xs rounded-2xl border border-white/10 bg-slate-950/90 p-4 text-sm text-white opacity-0 shadow-2xl backdrop-blur"
+        class="pulse-tooltip pointer-events-none absolute left-4 top-4 z-30 w-[min(18rem,calc(100%-2rem))] rounded-2xl border border-white/10 bg-slate-950/90 p-4 text-sm text-white opacity-0 shadow-2xl backdrop-blur"
         data-global-pulse-tooltip
         aria-hidden="true"
       >
       </div>
       <div
-        class="absolute bottom-4 left-4 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-teal-100 backdrop-blur"
+        class="pointer-events-none absolute bottom-4 left-4 z-20 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-teal-100 backdrop-blur"
       >
-        Drag the globe. Select a region.
+        Drag, hover, or select a region
+      </div>
+      <div
+        class="pointer-events-none absolute right-4 top-4 z-20 rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-cyan-100 shadow-2xl backdrop-blur"
+      >
+        Blue Marble texture<br />live route arcs
       </div>
     </div>
 
@@ -54,6 +69,9 @@ import { regionPulses } from '~/data/data-nexus';
       </div>
 
       <script is:inline type="application/json" data-pulse-regions set:html={JSON.stringify(regionPulses)} />
+      <p class="sr-only" aria-live="polite" data-global-pulse-live>
+        North America is selected in the Global Data Pulse.
+      </p>
 
       <div class="mt-6 grid gap-3" role="list" aria-label="Global data pulse regions">
         {

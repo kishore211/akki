@@ -7,10 +7,11 @@ The current implementation replaces the original AstroWind template homepage wit
 ## Experience
 
 - Scroll-driven exhibit narrative from the 2025 lakehouse baseline to 2035 agentic data infrastructure.
-- Three.js Global Data Pulse with regional governance and infrastructure signals.
-- Evolution Slider comparing centralized server farms with distributed edge intelligence.
+- Three.js Global Data Pulse with local Blue Marble-style Earth imagery, cloud texture, pulsing regional markers, and route arcs.
+- Scroll-aware Evolution Lab comparing centralized server farms with distributed edge intelligence.
 - Dilemma Simulator for the biometric health-data ethics scenario.
 - Clickable cryptographic nodes for Federated Learning, Fully Homomorphic Encryption, and Zero-Knowledge Proofs.
+- Audience Mission Control with QR onboarding, local vote fallback, and live exhibit meters.
 - Analytics-ready custom events with a no-op fallback when GA4 is not configured.
 
 ## Commands
@@ -27,16 +28,16 @@ npm run preview
 
 The project remains a static Astro site and is compatible with Vercel's default Astro deployment flow.
 
-Before the live showcase, update `src/config.yaml` with the final production URL and analytics ID if event collection is required.
+The current production URL is `https://data-nexus-three.vercel.app`. Before the live showcase, update `src/config.yaml` only if that URL changes or if an analytics ID is required.
 
 Optional public environment variables:
 
 ```bash
-PUBLIC_SHOWCASE_URL=https://your-vercel-domain.vercel.app
+PUBLIC_SHOWCASE_URL=https://data-nexus-three.vercel.app
 PUBLIC_POLL_EMBED_URL=https://your-poll-provider/embed/link
 ```
 
-`PUBLIC_SHOWCASE_URL` is used to generate the QR code in the presentation section. `PUBLIC_POLL_EMBED_URL` can point to a Slido, Mentimeter, or similar poll embed. If no poll URL is configured, the page renders a static room-vote run sheet.
+`PUBLIC_SHOWCASE_URL` is used to generate the QR code in Mission Control. `PUBLIC_POLL_EMBED_URL` can point to a Slido, Mentimeter, or similar poll embed. If no poll URL is configured, the page renders an interactive client-side vote fallback.
 
 ## Presentation Notes
 
@@ -45,3 +46,7 @@ PUBLIC_POLL_EMBED_URL=https://your-poll-provider/embed/link
 - Use the Evolution Slider to explain the sustainability paradox.
 - Run the Dilemma Simulator with the audience before revealing the chosen consequence.
 - Close with the Cryptography and Showcase sections to connect the technical solution back to the capstone rubric.
+
+## Visual Assets
+
+- `public/assets/data-nexus/earth-blue-marble-2048.jpg` and `public/assets/data-nexus/earth-clouds-1024.png` are local Earth texture assets used by the Global Data Pulse. They are sourced from the public Three.js example planet texture set and loaded locally so the presentation does not depend on external image requests.

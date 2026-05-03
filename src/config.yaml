@@ -1,6 +1,6 @@
 site:
   name: The Data Nexus
-  site: 'https://data-nexus-2035.vercel.app'
+  site: 'https://data-nexus-three.vercel.app'
   base: '/'
   trailingSlash: false
 
