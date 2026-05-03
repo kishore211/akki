@@ -24,7 +24,7 @@ npm run build
 npm run preview
 ```
 
-## Deployment
+## Deployment Test
 
 The project remains a static Astro site and is compatible with Vercel's default Astro deployment flow.
 
