@@ -5,9 +5,11 @@ interface Props {
   title: string;
   subtitle: string;
   tone?: 'light' | 'dark';
+  chapter?: string;
+  stage?: string;
 }
 
-const { id, eyebrow, title, subtitle, tone = 'light' } = Astro.props;
+const { id, eyebrow, title, subtitle, tone = 'light', chapter = '', stage = '' } = Astro.props;
 ---
 
 <section
@@ -17,8 +19,19 @@ const { id, eyebrow, title, subtitle, tone = 'light' } = Astro.props;
     tone === 'dark' ? 'bg-slate-950 text-white' : 'bg-slate-50 text-slate-950 dark:bg-slate-950 dark:text-white',
   ]}
   data-nexus-section
+  data-section-label={eyebrow}
+  data-section-chapter={chapter}
+  data-section-stage={stage}
+  data-section-tone={tone}
+  style="--section-progress: 0; --section-focus: 1; --section-lift: 0px; --section-scale: 1; --section-opacity: 1; --section-blur: 0px; --section-ribbon-shift: 0px;"
 >
-  <div class="mx-auto max-w-7xl">
+  <div class="section-cinema pointer-events-none absolute inset-0" aria-hidden="true">
+    <span class="section-grid"></span>
+    <span class="section-ribbon section-ribbon-a"></span>
+    <span class="section-ribbon section-ribbon-b"></span>
+  </div>
+
+  <div class="section-content relative z-10 mx-auto max-w-7xl">
     <div class="max-w-3xl">
       <p class="text-sm font-semibold uppercase tracking-[0.18em] text-teal-600 dark:text-teal-300">{eyebrow}</p>
       <h2 class="mt-4 text-3xl font-bold leading-tight text-slate-950 dark:text-white md:text-5xl">{title}</h2>
@@ -30,3 +43,106 @@ const { id, eyebrow, title, subtitle, tone = 'light' } = Astro.props;
     </div>
   </div>
 </section>
+
+<style>
+  .nexus-section {
+    --section-accent: 20 184 166;
+    --section-warm: 245 158 11;
+  }
+
+  .nexus-section[data-section-stage='future-lab'] {
+    --section-accent: 56 189 248;
+    --section-warm: 245 158 11;
+  }
+
+  .nexus-section[data-section-stage='ethics-pressure'] {
+    --section-accent: 244 63 94;
+    --section-warm: 245 158 11;
+  }
+
+  .nexus-section[data-section-stage='crypto-flow'] {
+    --section-accent: 45 212 191;
+    --section-warm: 56 189 248;
+  }
+
+  .nexus-section[data-section-stage='mission-control'] {
+    --section-accent: 16 185 129;
+    --section-warm: 245 158 11;
+  }
+
+  .section-content {
+    transform: translate3d(0, var(--section-lift, 0px), 0) scale(var(--section-scale, 1));
+    transform-origin: center top;
+    opacity: var(--section-opacity, 1);
+    filter: blur(var(--section-blur, 0px));
+    transition:
+      filter 0.25s ease-out,
+      opacity 0.25s ease-out;
+    will-change: transform, opacity, filter;
+  }
+
+  .nexus-section.is-entering .section-content {
+    transform-origin: center bottom;
+  }
+
+  .nexus-section.is-exiting .section-content {
+    transform-origin: center top;
+  }
+
+  .section-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(90deg, rgb(var(--section-accent) / 0.08) 1px, transparent 1px),
+      linear-gradient(rgb(var(--section-accent) / 0.055) 1px, transparent 1px);
+    background-size: 72px 72px;
+    opacity: 0.34;
+    mask-image: linear-gradient(180deg, transparent, black 18%, black 82%, transparent);
+  }
+
+  .section-ribbon {
+    position: absolute;
+    height: 1px;
+    width: min(52rem, 78vw);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgb(var(--section-accent) / 0.44),
+      rgb(var(--section-warm) / 0.28),
+      transparent
+    );
+    opacity: 0.54;
+  }
+
+  .section-ribbon-a {
+    left: -8vw;
+    top: 5rem;
+    transform: rotate(-7deg) translate3d(var(--section-ribbon-shift, 0px), 0, 0);
+  }
+
+  .section-ribbon-b {
+    bottom: 5rem;
+    right: -10vw;
+    transform: rotate(9deg) translate3d(calc(var(--section-ribbon-shift, 0px) * -1), 0, 0);
+  }
+
+  @media (max-width: 767px) {
+    .section-grid {
+      background-size: 48px 48px;
+      opacity: 0.22;
+    }
+
+    .section-ribbon {
+      opacity: 0.28;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .section-content,
+    .section-ribbon {
+      transform: none;
+      filter: none;
+      opacity: 1;
+    }
+  }
+</style>

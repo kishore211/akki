@@ -49,7 +49,7 @@ export const initTechNodes = () => {
 
     root.dataset.techNodesReady = 'true';
 
-    const renderProtocol = (button: HTMLButtonElement) => {
+    const renderProtocol = (button: HTMLButtonElement, shouldBroadcast = true) => {
       const protocol = parseProtocol(button.dataset.protocol ?? null);
       if (!protocol) return;
 
@@ -70,12 +70,17 @@ export const initTechNodes = () => {
         const item = document.createElement('div');
         item.className =
           'flow-step rounded-2xl border border-white/10 bg-white/6 p-4 text-center text-sm font-semibold text-white';
+        item.dataset.flowStep = '';
+        item.style.setProperty('--flow-index', String(index));
         item.textContent = step;
         flow.append(item);
         window.setTimeout(() => item.classList.add('is-animating'), index * 120);
       });
 
-      trackNexusEvent('tech_node_selected', { protocol: protocol.id });
+      if (shouldBroadcast) {
+        window.dispatchEvent(new CustomEvent('nexus:tech_node_selected', { detail: { protocol: protocol.id } }));
+        trackNexusEvent('tech_node_selected', { protocol: protocol.id });
+      }
     };
 
     const selectButton = (button: HTMLButtonElement) => {
@@ -101,6 +106,6 @@ export const initTechNodes = () => {
         selectButton(buttons[nextIndex]);
       });
     });
-    if (buttons[0]) renderProtocol(buttons[0]);
+    if (buttons[0]) renderProtocol(buttons[0], false);
   });
 };

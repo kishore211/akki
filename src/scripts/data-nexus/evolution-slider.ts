@@ -79,7 +79,9 @@ export const initEvolutionSliders = () => {
 
     input.addEventListener('input', () => update('manual'));
     input.addEventListener('change', () => {
-      trackNexusEvent('evolution_slider_changed', { value: Number(input.value) });
+      const value = Number(input.value);
+      window.dispatchEvent(new CustomEvent('nexus:evolution_slider_changed', { detail: { value } }));
+      trackNexusEvent('evolution_slider_changed', { value });
     });
 
     hotspots.forEach((hotspot) => {

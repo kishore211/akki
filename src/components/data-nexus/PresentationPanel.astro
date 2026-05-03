@@ -174,8 +174,10 @@ const qrSvg = await QRCode.toString(showcaseUrl, {
                 <span data-meter-scroll>Showcase reached</span>
               </div>
               <div class="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
-                <span class="block h-full rounded-full bg-amber-300 transition-[width] duration-500" style="width: 86%"
-                ></span>
+                <span
+                  class="block h-full rounded-full bg-amber-300 transition-[width] duration-500"
+                  data-meter-scroll-bar
+                  style="width: 86%"></span>
               </div>
             </div>
             <div>
@@ -201,6 +203,15 @@ const qrSvg = await QRCode.toString(showcaseUrl, {
             This panel now mirrors the live story instead of ending the page with a static placeholder.
           </p>
         </div>
+
+        <div class="rounded-3xl border border-white/10 bg-white/6 p-5">
+          <p class="text-sm font-semibold uppercase tracking-[0.16em] text-amber-200">Live story trace</p>
+          <ol class="mt-4 grid gap-2" data-mission-trace aria-live="polite">
+            <li class="trace-item rounded-2xl border border-white/10 bg-slate-950/50 px-4 py-3 text-sm text-slate-300">
+              Waiting for the first audience signal.
+            </li>
+          </ol>
+        </div>
       </div>
     </div>
   </div>
@@ -225,5 +236,26 @@ const qrSvg = await QRCode.toString(showcaseUrl, {
     border-color: rgb(45 212 191 / 0.58);
     background: rgb(45 212 191 / 0.18);
     color: rgb(204 251 241);
+  }
+
+  .mission-control .trace-item {
+    animation: traceRise 320ms ease both;
+  }
+
+  @keyframes traceRise {
+    from {
+      opacity: 0;
+      transform: translateY(0.35rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mission-control .trace-item {
+      animation: none;
+    }
   }
 </style>

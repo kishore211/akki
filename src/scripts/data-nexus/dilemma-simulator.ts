@@ -34,6 +34,7 @@ export const initDilemmaSimulators = () => {
       body.textContent =
         "The simulator keeps the PRD's moral question in the interface instead of leaving it as a paragraph in the report.";
       impactList.replaceChildren();
+      root.dataset.consequenceReady = 'false';
       reset.classList.add('hidden');
     };
 
@@ -49,16 +50,32 @@ export const initDilemmaSimulators = () => {
         body.textContent = button.dataset.outcome ?? '';
         impactList.replaceChildren();
 
-        parseImpact(button.dataset.impact ?? null).forEach((impact) => {
+        root.dataset.consequenceReady = 'false';
+        parseImpact(button.dataset.impact ?? null).forEach((impact, index) => {
           const item = document.createElement('li');
           item.className =
-            'rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm dark:bg-white/10 dark:text-slate-200';
-          item.textContent = impact;
+            'consequence-card rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm dark:bg-white/10 dark:text-slate-200';
+          item.style.setProperty('--impact-index', String(index));
+
+          const label = document.createElement('span');
+          label.className = 'mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-rose-500 dark:text-rose-200';
+          label.textContent = `Consequence 0${index + 1}`;
+
+          const text = document.createElement('span');
+          text.textContent = impact;
+
+          item.append(label, text);
           impactList.append(item);
         });
 
+        window.requestAnimationFrame(() => {
+          root.dataset.consequenceReady = 'true';
+        });
+
         reset.classList.remove('hidden');
-        trackNexusEvent('dilemma_choice', { choice: button.dataset.dilemmaChoice ?? 'unknown' });
+        const choice = button.dataset.dilemmaChoice ?? 'unknown';
+        window.dispatchEvent(new CustomEvent('nexus:dilemma_choice', { detail: { choice } }));
+        trackNexusEvent('dilemma_choice', { choice });
       });
     });
 

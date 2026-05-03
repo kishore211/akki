@@ -1,0 +1,129 @@
+---
+// Looping abstract video backdrop with multiple hosted source fallbacks.
+// If every source fails to load, the element gracefully removes itself and
+// the existing ExhibitAtmosphere canvas continues to provide ambience.
+---
+
+<div class="exhibit-backdrop fixed inset-0 z-0 overflow-hidden pointer-events-none" data-exhibit-backdrop aria-hidden="true">
+  <video
+    class="exhibit-backdrop-video"
+    data-exhibit-backdrop-video
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="metadata"
+    poster="/assets/data-nexus/earth-blue-marble-2048.jpg"
+  >
+    <source
+      src="https://videos.pexels.com/video-files/3129957/3129957-uhd_2560_1440_30fps.mp4"
+      type="video/mp4"
+    />
+    <source
+      src="https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4"
+      type="video/mp4"
+    />
+    <source
+      src="https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-a-network-1167-large.mp4"
+      type="video/mp4"
+    />
+  </video>
+  <div class="exhibit-backdrop-scrim" data-exhibit-backdrop-scrim></div>
+</div>
+
+<style>
+  .exhibit-backdrop {
+    background: radial-gradient(circle at 30% 20%, rgb(15 23 42 / 0.6), rgb(2 6 23 / 0.95));
+  }
+
+  .exhibit-backdrop-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.55;
+    transform: scale(var(--backdrop-scale, 1.05));
+    transition:
+      opacity 0.6s ease,
+      transform 0.6s ease;
+    will-change: transform, opacity;
+  }
+
+  .exhibit-backdrop-scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(
+        circle at 50% 38%,
+        transparent 0%,
+        rgb(2 6 23 / 0.35) 38%,
+        rgb(2 6 23 / 0.78) 78%,
+        rgb(2 6 23 / 0.92) 100%
+      ),
+      linear-gradient(180deg, rgb(2 6 23 / 0.4) 0%, rgb(2 6 23 / 0.18) 38%, rgb(2 6 23 / 0.7) 100%);
+    mix-blend-mode: multiply;
+    transition: background 0.8s ease;
+  }
+
+  @media (max-width: 767px) {
+    .exhibit-backdrop-video {
+      opacity: 0.4;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .exhibit-backdrop-video {
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const setupBackdrop = () => {
+    const root = document.querySelector<HTMLElement>('[data-exhibit-backdrop]');
+    if (!root) return;
+    const video = root.querySelector<HTMLVideoElement>('[data-exhibit-backdrop-video]');
+    if (!video) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let failed = 0;
+    const sources = Array.from(video.querySelectorAll('source'));
+
+    const onSourceError = () => {
+      failed += 1;
+      if (failed >= sources.length) {
+        root.style.display = 'none';
+      }
+    };
+    sources.forEach((s) => s.addEventListener('error', onSourceError));
+
+    if (reduceMotion) {
+      video.pause();
+    } else {
+      video.play().catch(() => {
+        // Autoplay blocked — keep the poster visible, that's still on-brand.
+      });
+    }
+
+    const handleVisibility = () => {
+      if (document.hidden) {
+        video.pause();
+      } else if (!reduceMotion) {
+        video.play().catch(() => {});
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    const cleanup = () => {
+      document.removeEventListener('visibilitychange', handleVisibility);
+      sources.forEach((s) => s.removeEventListener('error', onSourceError));
+      document.removeEventListener('astro:before-swap', cleanup);
+    };
+    document.addEventListener('astro:before-swap', cleanup);
+  };
+
+  document.addEventListener('astro:page-load', setupBackdrop);
+</script>

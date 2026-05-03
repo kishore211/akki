@@ -7,14 +7,23 @@ import { baselineCards } from '~/data/data-nexus';
 
 <SectionShell
   id="baseline"
-  eyebrow="2025 baseline"
+  eyebrow="Current Trends · Lakehouse + real-time streaming"
   title="The lakehouse becomes the control plane."
   subtitle="The present-day system is no longer a warehouse or a lake. It is a governed stream of operational change, analytical context, and policy enforcement."
+  chapter="01"
+  stage="baseline-flow"
 >
-  <div class="grid gap-6 lg:grid-cols-3">
+  <div class="grid gap-6 lg:grid-cols-3" data-baseline-sources>
     {
-      baselineCards.map((card) => (
-        <article class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-white/5">
+      baselineCards.map((card, index) => (
+        <button
+          type="button"
+          class="baseline-source rounded-3xl border border-slate-200 bg-white p-6 text-left shadow-sm transition hover:-translate-y-1 hover:border-teal-300 hover:shadow-xl hover:shadow-teal-950/10 focus:outline-none focus:ring-2 focus:ring-teal-400 dark:border-white/10 dark:bg-white/5 dark:hover:border-teal-300/70"
+          data-baseline-source
+          data-source-index={String(index)}
+          data-source-label={card.title}
+          aria-pressed={index === 0 ? 'true' : 'false'}
+        >
           <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-100 text-teal-700 dark:bg-teal-400/15 dark:text-teal-200">
             <Icon name={card.icon} class="h-6 w-6" />
           </div>
@@ -25,12 +34,104 @@ import { baselineCards } from '~/data/data-nexus';
               {card.meta}
             </p>
           )}
-        </article>
+        </button>
       ))
     }
   </div>
 
-  <div class="mt-12">
+  <div
+    class="data-flow-bridge my-10 overflow-hidden rounded-[1.5rem] border border-teal-200 bg-white/70 p-4 shadow-sm dark:border-white/10 dark:bg-white/5"
+    data-data-flow-bridge
+    data-active-source="0"
+    aria-hidden="true"
+  >
+    <div class="grid gap-3 md:grid-cols-3">
+      <span class="flow-lane" data-flow-lane="0"><span></span></span>
+      <span class="flow-lane" data-flow-lane="1"><span></span></span>
+      <span class="flow-lane" data-flow-lane="2"><span></span></span>
+    </div>
+  </div>
+
+  <div>
     <GlobalDataPulse />
   </div>
 </SectionShell>
+
+<style>
+  .baseline-source[aria-pressed='true'] {
+    border-color: rgb(20 184 166 / 0.72);
+    box-shadow:
+      inset 0 0 0 1px rgb(20 184 166 / 0.28),
+      0 20px 60px rgb(20 184 166 / 0.13);
+  }
+
+  .data-flow-bridge {
+    --active-lane: 0;
+  }
+
+  .data-flow-bridge[data-active-source='1'] {
+    --active-lane: 1;
+  }
+
+  .data-flow-bridge[data-active-source='2'] {
+    --active-lane: 2;
+  }
+
+  .flow-lane {
+    position: relative;
+    display: block;
+    height: 0.55rem;
+    overflow: hidden;
+    border-radius: 999px;
+    background:
+      linear-gradient(90deg, rgb(20 184 166 / 0.16), rgb(14 165 233 / 0.2), rgb(245 158 11 / 0.16)),
+      rgb(15 23 42 / 0.06);
+  }
+
+  .flow-lane span {
+    position: absolute;
+    inset: 0;
+    width: 42%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, transparent, rgb(20 184 166 / 0.88), rgb(245 158 11 / 0.82), transparent);
+    filter: drop-shadow(0 0 12px rgb(20 184 166 / 0.48));
+    transform: translateX(-120%);
+    animation: dataPacket 2.6s linear infinite;
+  }
+
+  .flow-lane[data-flow-lane='1'] span {
+    animation-delay: 320ms;
+  }
+
+  .flow-lane[data-flow-lane='2'] span {
+    animation-delay: 640ms;
+  }
+
+  .data-flow-bridge[data-active-source='0'] .flow-lane[data-flow-lane='0'],
+  .data-flow-bridge[data-active-source='1'] .flow-lane[data-flow-lane='1'],
+  .data-flow-bridge[data-active-source='2'] .flow-lane[data-flow-lane='2'] {
+    background:
+      linear-gradient(90deg, rgb(20 184 166 / 0.24), rgb(14 165 233 / 0.28), rgb(245 158 11 / 0.24)),
+      rgb(20 184 166 / 0.1);
+  }
+
+  @keyframes dataPacket {
+    0% {
+      transform: translateX(-120%);
+    }
+    100% {
+      transform: translateX(260%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .baseline-source {
+      transition: none;
+    }
+
+    .flow-lane span {
+      animation: none;
+      transform: translateX(70%);
+    }
+  }
+</style>

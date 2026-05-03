@@ -1,0 +1,55 @@
+<div class="exhibit-atmosphere fixed inset-0 z-[1] pointer-events-none" data-exhibit-atmosphere aria-hidden="true">
+  <canvas class="h-full w-full" data-atmosphere-canvas></canvas>
+  <span class="atmosphere-plate atmosphere-plate-a"></span>
+  <span class="atmosphere-plate atmosphere-plate-b"></span>
+</div>
+
+<style>
+  .exhibit-atmosphere {
+    opacity: 0.28;
+    mix-blend-mode: screen;
+  }
+
+  .exhibit-atmosphere::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(115deg, transparent 0 34%, rgb(45 212 191 / 0.08) 34% 34.2%, transparent 34.2% 100%),
+      linear-gradient(68deg, transparent 0 64%, rgb(245 158 11 / 0.08) 64% 64.18%, transparent 64.18% 100%);
+    transform: translate3d(var(--nexus-atmosphere-shift, 0px), 0, 0);
+  }
+
+  .atmosphere-plate {
+    position: absolute;
+    height: 1px;
+    width: min(42rem, 72vw);
+    background: linear-gradient(90deg, transparent, rgb(45 212 191 / 0.68), rgb(245 158 11 / 0.42), transparent);
+    opacity: 0.42;
+  }
+
+  .atmosphere-plate-a {
+    left: 4vw;
+    top: 18vh;
+    transform: rotate(-10deg) translate3d(var(--nexus-atmosphere-shift, 0px), 0, 0);
+  }
+
+  .atmosphere-plate-b {
+    bottom: 20vh;
+    right: 3vw;
+    transform: rotate(12deg) translate3d(calc(var(--nexus-atmosphere-shift, 0px) * -1), 0, 0);
+  }
+
+  @media (max-width: 767px) {
+    .exhibit-atmosphere {
+      opacity: 0.16;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .exhibit-atmosphere::before,
+    .atmosphere-plate {
+      transform: none;
+    }
+  }
+</style>

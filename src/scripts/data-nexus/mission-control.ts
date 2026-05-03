@@ -46,7 +46,10 @@ export const initMissionControl = () => {
     const voteTotal = root.querySelector<HTMLElement>('[data-vote-total]');
     const interactionCount = root.querySelector<HTMLElement>('[data-meter-interactions]');
     const interactionBar = root.querySelector<HTMLElement>('[data-meter-interactions-bar]');
+    const scrollMeter = root.querySelector<HTMLElement>('[data-meter-scroll]');
+    const scrollBar = root.querySelector<HTMLElement>('[data-meter-scroll-bar]');
     const presenterCue = root.querySelector<HTMLElement>('[data-presenter-cue]');
+    const trace = root.querySelector<HTMLElement>('[data-mission-trace]');
     const choices = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-mission-choice]'));
 
     root.dataset.missionReady = 'true';
@@ -57,6 +60,37 @@ export const initMissionControl = () => {
       interactions += 1;
       if (interactionCount) interactionCount.textContent = String(interactions);
       if (interactionBar) interactionBar.style.width = `${Math.min(100, 12 + interactions * 12)}%`;
+    };
+
+    const pushTrace = (label: string, detail: string) => {
+      if (!trace) return;
+
+      const traceKey = `${label}:${detail}`;
+      if (trace.dataset.lastTrace === traceKey) return;
+      trace.dataset.lastTrace = traceKey;
+
+      if (trace.dataset.traceStarted !== 'true') {
+        trace.replaceChildren();
+        trace.dataset.traceStarted = 'true';
+      }
+
+      const item = document.createElement('li');
+      item.className = 'trace-item rounded-2xl border border-white/10 bg-slate-950/50 px-4 py-3 text-sm text-slate-300';
+
+      const title = document.createElement('span');
+      title.className = 'block text-xs font-bold uppercase tracking-[0.14em] text-teal-200';
+      title.textContent = `${label}:`;
+
+      const body = document.createElement('span');
+      body.className = 'mt-1 block leading-6';
+      body.textContent = detail;
+
+      item.append(title, body);
+      trace.prepend(item);
+
+      Array.from(trace.children)
+        .slice(5)
+        .forEach((child) => child.remove());
     };
 
     const renderVotes = (selectedId = '') => {
@@ -80,6 +114,7 @@ export const initMissionControl = () => {
       if (status) status.textContent = 'Room live';
       if (presenterCue)
         presenterCue.textContent = 'Send the room to the dilemma vote, then reveal the shared consequence.';
+      pushTrace('Room opened', 'Audience controls are live and ready for the ethical decision.');
       bumpInteraction();
       trackNexusEvent('mission_room_opened');
     });
@@ -95,6 +130,7 @@ export const initMissionControl = () => {
           result.textContent = `${label} is leading the room vote. Carry that answer back to the ethics simulator and explain the trade-off.`;
         if (presenterCue)
           presenterCue.textContent = `Audience selected: ${label}. Connect the vote to privacy, intervention speed, and governance.`;
+        pushTrace('Audience vote', `${label} moved the live room result.`);
         bumpInteraction();
         trackNexusEvent('mission_vote', { choice: id });
       });
@@ -104,6 +140,15 @@ export const initMissionControl = () => {
       const region = (event as CustomEvent<{ region?: string }>).detail?.region ?? 'a region';
       if (presenterCue)
         presenterCue.textContent = `Global pulse selected ${region}. Tie geography to privacy pressure before moving forward.`;
+      pushTrace('Globe route', `${region} became the active regional pressure point.`);
+      bumpInteraction();
+    });
+
+    window.addEventListener('nexus:baseline_source_selected', (event) => {
+      const source = (event as CustomEvent<{ source?: string }>).detail?.source ?? 'a baseline source';
+      if (presenterCue)
+        presenterCue.textContent = `${source} is feeding the globe. Connect the card to the route pressure.`;
+      pushTrace('Baseline source', `${source} is now feeding the exhibit flow.`);
       bumpInteraction();
     });
 
@@ -111,13 +156,40 @@ export const initMissionControl = () => {
       if (presenterCue)
         presenterCue.textContent =
           'The infrastructure slider moved. Ask what changed: energy, latency, or privacy risk?';
+      pushTrace('Evolution lab', 'The infrastructure transformation was scrubbed by the visitor.');
       bumpInteraction();
     });
 
     window.addEventListener('nexus:dilemma_choice', (event) => {
       const choice = (event as CustomEvent<{ choice?: string }>).detail?.choice ?? '';
       if (choice) renderVotes(choice);
+      pushTrace(
+        'Dilemma choice',
+        choice ? `${choice.replace(/-/g, ' ')} was tested in the simulator.` : 'The dilemma simulator was used.'
+      );
       bumpInteraction();
+    });
+
+    window.addEventListener('nexus:tech_node_selected', (event) => {
+      const protocol = (event as CustomEvent<{ protocol?: string }>).detail?.protocol ?? 'privacy protocol';
+      if (presenterCue)
+        presenterCue.textContent = `${protocol} selected. Use this as the privacy-safe response to the dilemma.`;
+      if (root.querySelector('[data-meter-route]')) {
+        const route = root.querySelector<HTMLElement>('[data-meter-route]');
+        if (route) route.textContent = protocol.replace(/-/g, ' ');
+      }
+      pushTrace('Protocol selected', `${protocol.replace(/-/g, ' ')} became the privacy-safe route.`);
+      bumpInteraction();
+    });
+
+    window.addEventListener('nexus:stage_changed', (event) => {
+      const detail = (event as CustomEvent<{ label?: string; chapter?: string }>).detail;
+      const label = detail?.label ?? 'Showcase';
+      const chapter = detail?.chapter ?? '05';
+      const chapterNumber = Number(chapter);
+      if (scrollMeter) scrollMeter.textContent = label;
+      if (scrollBar && Number.isFinite(chapterNumber))
+        scrollBar.style.width = `${Math.min(100, 18 + chapterNumber * 14)}%`;
     });
 
     renderVotes();

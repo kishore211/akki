@@ -7,6 +7,11 @@ import { heroMetrics, timelineMilestones } from '~/data/data-nexus';
   id="overview"
   class="relative isolate flex min-h-[calc(100vh-4rem)] items-center overflow-hidden bg-slate-950 px-4 py-24 text-white sm:px-6 lg:px-8"
   data-nexus-section
+  data-section-label="Overview"
+  data-section-chapter="00"
+  data-section-stage="entry"
+  data-section-tone="dark"
+  style="--section-progress: 0; --section-focus: 1; --section-lift: 0px; --section-scale: 1; --section-ribbon-shift: 0px;"
 >
   <div
     class="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_20%_20%,rgba(20,184,166,0.28),transparent_28%),radial-gradient(circle_at_80%_16%,rgba(245,158,11,0.18),transparent_24%),linear-gradient(135deg,#020617_0%,#0f172a_46%,#111827_100%)]"
@@ -18,6 +23,10 @@ import { heroMetrics, timelineMilestones } from '~/data/data-nexus';
     >
     </div>
   </div>
+  <canvas
+    class="hero-field pointer-events-none absolute inset-0 -z-10 h-full w-full opacity-70"
+    data-hero-field-canvas
+    aria-hidden="true"></canvas>
   <div
     class="absolute left-1/2 top-24 -z-10 h-80 w-80 -translate-x-1/2 rounded-full border border-teal-300/20 opacity-80 blur-[1px] md:h-[34rem] md:w-[34rem]"
     data-parallax-layer
@@ -25,7 +34,7 @@ import { heroMetrics, timelineMilestones } from '~/data/data-nexus';
   >
   </div>
 
-  <div class="mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[1.08fr_0.92fr]">
+  <div class="hero-content mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[1.08fr_0.92fr]">
     <div>
       <p
         class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-teal-100 backdrop-blur"
@@ -58,8 +67,14 @@ import { heroMetrics, timelineMilestones } from '~/data/data-nexus';
         <div class="grid gap-3 sm:grid-cols-2">
           {
             heroMetrics.map((metric) => (
-              <article class="rounded-2xl border border-white/10 bg-slate-950/55 p-5">
-                <p class="text-3xl font-bold text-white">{metric.value}</p>
+              <article
+                class="hero-metric rounded-2xl border border-white/10 bg-slate-950/55 p-5"
+                data-hero-metric
+                data-countup-value={metric.value}
+              >
+                <p class="text-3xl font-bold text-white" data-countup-display>
+                  {metric.value}
+                </p>
                 <p class="mt-2 text-sm font-semibold uppercase tracking-[0.14em] text-teal-200">{metric.label}</p>
                 <p class="mt-3 text-sm leading-6 text-slate-300">{metric.detail}</p>
               </article>
@@ -69,10 +84,17 @@ import { heroMetrics, timelineMilestones } from '~/data/data-nexus';
       </div>
 
       <div class="mt-5 rounded-3xl border border-white/12 bg-slate-900/70 p-5 backdrop-blur">
-        <div class="grid gap-4">
+        <div class="relative grid gap-4" data-hero-timeline>
+          <span
+            class="timeline-cursor pointer-events-none absolute left-[2.35rem] top-3 hidden h-[calc(100%-1.5rem)] w-px origin-top rounded-full bg-amber-300/80 md:block"
+            style="transform: scaleY(0.08)"
+            data-timeline-cursor></span>
           {
             timelineMilestones.map((milestone) => (
-              <div class="grid grid-cols-[4.75rem_1fr] gap-4 rounded-2xl bg-white/5 p-4">
+              <div
+                class="timeline-step relative grid grid-cols-[4.75rem_1fr] gap-4 rounded-2xl bg-white/5 p-4"
+                data-timeline-step
+              >
                 <div class="text-2xl font-bold text-amber-300">{milestone.year}</div>
                 <div>
                   <p class="font-semibold text-white">{milestone.label}</p>
@@ -94,3 +116,81 @@ import { heroMetrics, timelineMilestones } from '~/data/data-nexus';
     <Icon name="tabler:arrow-down" class="h-4 w-4" />
   </a>
 </section>
+
+<style>
+  .hero-metric {
+    position: relative;
+    overflow: hidden;
+    transition:
+      transform 240ms ease,
+      border-color 240ms ease,
+      background-color 240ms ease;
+  }
+
+  .hero-content {
+    transform: translate3d(0, var(--section-lift, 0px), 0) scale(var(--section-scale, 1));
+    transform-origin: center top;
+    opacity: var(--section-opacity, 1);
+    filter: blur(var(--section-blur, 0px));
+    transition:
+      filter 0.25s ease-out,
+      opacity 0.25s ease-out;
+    will-change: transform, opacity, filter;
+  }
+
+  #overview.is-entering .hero-content {
+    transform-origin: center bottom;
+  }
+
+  #overview.is-exiting .hero-content {
+    transform-origin: center top;
+  }
+
+  .hero-field {
+    filter: saturate(calc(0.9 + var(--section-focus, 1) * 0.18));
+  }
+
+  .hero-metric::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    background: linear-gradient(180deg, rgb(45 212 191), rgb(245 158 11));
+    opacity: 0.72;
+    transform: scaleY(calc(0.25 + var(--section-progress, 0) * 0.75));
+    transform-origin: bottom;
+  }
+
+  .hero-metric:hover,
+  .hero-metric:focus-within {
+    border-color: rgb(45 212 191 / 0.5);
+    background-color: rgb(15 23 42 / 0.76);
+    transform: translateY(-0.25rem);
+  }
+
+  .timeline-step {
+    transition:
+      background-color 240ms ease,
+      transform 240ms ease;
+  }
+
+  .timeline-step.is-active {
+    background-color: rgb(245 158 11 / 0.14);
+    transform: translateX(-0.2rem);
+  }
+
+  .timeline-cursor {
+    box-shadow: 0 0 22px rgb(245 158 11 / 0.55);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-content,
+    .hero-metric,
+    .timeline-step {
+      transform: none;
+      transition: none;
+      filter: none;
+      opacity: 1;
+    }
+  }
+</style>

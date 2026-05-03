@@ -1,0 +1,76 @@
+---
+const chapters = [
+  { id: 'overview', index: '00', label: 'Overview' },
+  { id: 'baseline', index: '01', label: 'Current' },
+  { id: 'future', index: '02', label: 'Future' },
+  { id: 'ethics', index: '03', label: 'Ethics' },
+  { id: 'crypto', index: '04', label: 'Solutions' },
+  { id: 'showcase', index: '05', label: 'Live' },
+];
+---
+
+<aside
+  class="exhibit-progress pointer-events-none fixed right-5 top-1/2 z-40 hidden -translate-y-1/2 xl:block"
+  aria-label="Data Nexus exhibit progress"
+  data-exhibit-progress
+>
+  <div
+    class="pointer-events-auto rounded-2xl border border-slate-200/70 bg-white/88 p-3 shadow-2xl shadow-slate-950/10 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/78"
+  >
+    <div class="mb-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 dark:border-white/10 dark:bg-white/5">
+      <p class="text-[0.66rem] font-bold uppercase tracking-[0.16em] text-slate-400">Chapter</p>
+      <p class="mt-1 text-sm font-black text-slate-950 dark:text-white" data-progress-current-label>Overview</p>
+    </div>
+
+    <div class="relative mx-auto h-48 w-px overflow-hidden rounded-full bg-slate-200 dark:bg-white/12">
+      <span
+        class="absolute left-0 top-0 block w-px origin-top rounded-full bg-teal-500 transition-transform duration-200 dark:bg-teal-300"
+        style="height: 100%; transform: scaleY(0)"
+        data-progress-bar></span>
+    </div>
+
+    <nav class="mt-4 grid gap-2" aria-label="Exhibit chapters">
+      {
+        chapters.map((chapter) => (
+          <a
+            class="progress-link group grid grid-cols-[1.75rem_1fr] items-center gap-2 rounded-xl px-2 py-1.5 text-xs font-bold text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus:ring-2 focus:ring-teal-400 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
+            href={`#${chapter.id}`}
+            data-progress-link
+            data-section-target={chapter.id}
+          >
+            <span class="tabular-nums text-[0.68rem] text-slate-400 group-[.is-active]:text-teal-600 dark:group-[.is-active]:text-teal-200">
+              {chapter.index}
+            </span>
+            <span>{chapter.label}</span>
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</aside>
+
+<div
+  class="exhibit-mobile-progress pointer-events-none fixed bottom-4 left-4 z-40 rounded-2xl border border-slate-200/80 bg-white/88 px-3 py-2 text-xs font-black text-slate-950 shadow-2xl shadow-slate-950/10 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/78 dark:text-white xl:hidden"
+  data-progress-mobile
+>
+  <span class="text-slate-400" data-progress-current-index>00</span>
+  <span class="mx-2 text-slate-300">/</span>
+  <span data-progress-current-label>Overview</span>
+</div>
+
+<style>
+  .exhibit-progress .progress-link.is-active {
+    background: rgb(20 184 166 / 0.12);
+    color: rgb(15 23 42);
+  }
+
+  :global(.dark) .exhibit-progress .progress-link.is-active {
+    color: rgb(240 253 250);
+  }
+
+  @media (min-width: 1280px) {
+    .exhibit-mobile-progress {
+      display: none;
+    }
+  }
+</style>

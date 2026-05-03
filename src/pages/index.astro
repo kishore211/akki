@@ -1,6 +1,9 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
 import ExhibitHero from '~/components/data-nexus/ExhibitHero.astro';
+import ExhibitBackdrop from '~/components/data-nexus/ExhibitBackdrop.astro';
+import ExhibitAtmosphere from '~/components/data-nexus/ExhibitAtmosphere.astro';
+import ExhibitProgress from '~/components/data-nexus/ExhibitProgress.astro';
 import BaselineSection from '~/components/data-nexus/BaselineSection.astro';
 import FutureSection from '~/components/data-nexus/FutureSection.astro';
 import EthicsSection from '~/components/data-nexus/EthicsSection.astro';
@@ -17,6 +20,9 @@ const metadata = {
 
 <Layout metadata={metadata}>
   <Fragment slot="announcement"></Fragment>
+  <ExhibitBackdrop />
+  <ExhibitAtmosphere />
+  <ExhibitProgress />
   <ExhibitHero />
   <BaselineSection />
   <FutureSection />

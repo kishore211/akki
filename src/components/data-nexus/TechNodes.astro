@@ -52,10 +52,14 @@ import { cryptoProtocols } from '~/data/data-nexus';
         </p>
       </div>
 
-      <div class="tech-flow grid gap-3 sm:grid-cols-4" data-tech-flow>
+      <div class="tech-flow protocol-diagram grid gap-3 sm:grid-cols-4" data-tech-flow>
         {
-          cryptoProtocols[0].flow.map((step) => (
-            <div class="flow-step rounded-2xl border border-white/10 bg-white/6 p-4 text-center text-sm font-semibold text-white">
+          cryptoProtocols[0].flow.map((step, index) => (
+            <div
+              class="flow-step rounded-2xl border border-white/10 bg-white/6 p-4 text-center text-sm font-semibold text-white"
+              data-flow-step
+              style={`--flow-index: ${index}`}
+            >
               {step}
             </div>
           ))
@@ -78,7 +82,38 @@ import { cryptoProtocols } from '~/data/data-nexus';
   }
 
   .tech-nodes .flow-step {
+    position: relative;
+    z-index: 1;
     transform: translateY(0);
+  }
+
+  .tech-nodes .protocol-diagram {
+    position: relative;
+  }
+
+  .tech-nodes .protocol-diagram::before {
+    content: '';
+    position: absolute;
+    left: 8%;
+    right: 8%;
+    top: 50%;
+    height: 1px;
+    background: linear-gradient(90deg, rgb(45 212 191 / 0.25), rgb(56 189 248 / 0.7), rgb(245 158 11 / 0.38));
+    transform: translateY(-50%);
+  }
+
+  .tech-nodes .flow-step::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -0.45rem;
+    height: 0.5rem;
+    width: 0.5rem;
+    border-radius: 999px;
+    background: rgb(45 212 191);
+    box-shadow: 0 0 18px rgb(45 212 191 / 0.74);
+    opacity: 0;
+    transform: translateX(-50%) scale(0.7);
   }
 
   .tech-nodes .flow-step.is-animating {
@@ -100,8 +135,31 @@ import { cryptoProtocols } from '~/data/data-nexus';
     }
   }
 
+  .tech-nodes .flow-step.is-animating::after {
+    animation: packetFlash 560ms ease both;
+  }
+
+  @keyframes packetFlash {
+    0% {
+      opacity: 0;
+      transform: translateX(-50%) scale(0.7);
+    }
+    48% {
+      opacity: 1;
+      transform: translateX(-50%) scale(1.15);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(-50%) scale(0.7);
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .tech-nodes .flow-step.is-animating {
+      animation: none;
+    }
+
+    .tech-nodes .flow-step.is-animating::after {
       animation: none;
     }
   }
