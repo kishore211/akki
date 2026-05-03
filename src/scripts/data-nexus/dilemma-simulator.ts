@@ -26,7 +26,10 @@ export const initDilemmaSimulators = () => {
     root.dataset.dilemmaReady = 'true';
 
     const resetState = () => {
-      buttons.forEach((button) => button.classList.remove('is-active'));
+      buttons.forEach((button) => {
+        button.classList.remove('is-active');
+        button.setAttribute('aria-pressed', 'false');
+      });
       title.textContent = 'Choose a path to reveal the fallout.';
       body.textContent =
         "The simulator keeps the PRD's moral question in the interface instead of leaving it as a paragraph in the report.";
@@ -36,7 +39,11 @@ export const initDilemmaSimulators = () => {
 
     buttons.forEach((button) => {
       button.addEventListener('click', () => {
-        buttons.forEach((item) => item.classList.toggle('is-active', item === button));
+        buttons.forEach((item) => {
+          const isActive = item === button;
+          item.classList.toggle('is-active', isActive);
+          item.setAttribute('aria-pressed', String(isActive));
+        });
 
         title.textContent = button.dataset.outcomeTitle ?? '';
         body.textContent = button.dataset.outcome ?? '';

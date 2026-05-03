@@ -11,6 +11,15 @@ import { regionPulses } from '~/data/data-nexus';
       <canvas class="h-full min-h-[24rem] w-full" data-global-pulse-canvas aria-label="Interactive 3D global data pulse"
       ></canvas>
       <div
+        class="absolute inset-0 grid place-items-center bg-slate-950 text-center text-slate-200"
+        data-global-pulse-loading
+      >
+        <div>
+          <p class="text-lg font-bold">Preparing Global Data Pulse</p>
+          <p class="mt-2 text-sm leading-6 text-slate-300">The 3D scene loads as this module enters the timeline.</p>
+        </div>
+      </div>
+      <div
         class="pulse-fallback absolute inset-0 hidden place-items-center p-6 text-center text-slate-200"
         data-global-pulse-fallback
       >
@@ -51,6 +60,7 @@ import { regionPulses } from '~/data/data-nexus';
           regionPulses.map((region) => (
             <button
               type="button"
+              aria-pressed="false"
               class="pulse-region rounded-2xl border border-slate-200 bg-slate-50 p-4 text-left transition hover:-translate-y-0.5 hover:border-teal-300 hover:bg-teal-50 focus:outline-none focus:ring-2 focus:ring-teal-400 dark:border-white/10 dark:bg-slate-950/50 dark:hover:border-teal-300/70 dark:hover:bg-teal-300/10"
               data-region-button
               data-region-id={region.id}

@@ -23,6 +23,7 @@ import { dilemmaChoices } from '~/data/data-nexus';
         dilemmaChoices.map((choice) => (
           <button
             type="button"
+            aria-pressed="false"
             class="choice-card rounded-2xl border border-slate-200 bg-slate-50 p-5 text-left transition hover:-translate-y-0.5 hover:border-rose-300 hover:bg-rose-50 focus:outline-none focus:ring-2 focus:ring-rose-400 dark:border-white/10 dark:bg-slate-950/50 dark:hover:border-rose-300/70 dark:hover:bg-rose-300/10"
             data-dilemma-choice={choice.id}
             data-outcome-title={choice.outcomeTitle}

@@ -11,6 +11,8 @@ import { cryptoProtocols } from '~/data/data-nexus';
           type="button"
           role="tab"
           aria-selected={index === 0 ? 'true' : 'false'}
+          aria-controls="tech-detail-panel"
+          tabindex={index === 0 ? '0' : '-1'}
           class="tech-node rounded-3xl border border-white/10 bg-white/6 p-6 text-left transition hover:-translate-y-1 hover:border-teal-300/60 focus:outline-none focus:ring-2 focus:ring-teal-300"
           data-tech-node={protocol.id}
           data-protocol={JSON.stringify(protocol)}
@@ -32,6 +34,8 @@ import { cryptoProtocols } from '~/data/data-nexus';
 
   <div
     class="mt-8 rounded-[2rem] border border-white/10 bg-slate-950/60 p-6 lg:p-8"
+    id="tech-detail-panel"
+    role="tabpanel"
     data-tech-detail
     aria-live="polite"
   >

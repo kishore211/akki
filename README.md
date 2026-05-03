@@ -29,6 +29,15 @@ The project remains a static Astro site and is compatible with Vercel's default 
 
 Before the live showcase, update `src/config.yaml` with the final production URL and analytics ID if event collection is required.
 
+Optional public environment variables:
+
+```bash
+PUBLIC_SHOWCASE_URL=https://your-vercel-domain.vercel.app
+PUBLIC_POLL_EMBED_URL=https://your-poll-provider/embed/link
+```
+
+`PUBLIC_SHOWCASE_URL` is used to generate the QR code in the presentation section. `PUBLIC_POLL_EMBED_URL` can point to a Slido, Mentimeter, or similar poll embed. If no poll URL is configured, the page renders a static room-vote run sheet.
+
 ## Presentation Notes
 
 - Use the Overview section as the QR onboarding screen.

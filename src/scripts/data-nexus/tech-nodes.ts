@@ -57,6 +57,7 @@ export const initTechNodes = () => {
         const isActive = item === button;
         item.classList.toggle('is-active', isActive);
         item.setAttribute('aria-selected', String(isActive));
+        item.tabIndex = isActive ? 0 : -1;
       });
 
       kicker.textContent = protocol.shortName ? `${protocol.shortName} protocol node` : 'Protocol node';
@@ -77,7 +78,29 @@ export const initTechNodes = () => {
       trackNexusEvent('tech_node_selected', { protocol: protocol.id });
     };
 
-    buttons.forEach((button) => button.addEventListener('click', () => renderProtocol(button)));
+    const selectButton = (button: HTMLButtonElement) => {
+      renderProtocol(button);
+      button.focus();
+    };
+
+    buttons.forEach((button, index) => {
+      button.addEventListener('click', () => renderProtocol(button));
+      button.addEventListener('keydown', (event) => {
+        if (
+          event.key !== 'ArrowRight' &&
+          event.key !== 'ArrowDown' &&
+          event.key !== 'ArrowLeft' &&
+          event.key !== 'ArrowUp'
+        ) {
+          return;
+        }
+
+        event.preventDefault();
+        const direction = event.key === 'ArrowRight' || event.key === 'ArrowDown' ? 1 : -1;
+        const nextIndex = (index + direction + buttons.length) % buttons.length;
+        selectButton(buttons[nextIndex]);
+      });
+    });
     if (buttons[0]) renderProtocol(buttons[0]);
   });
 };
