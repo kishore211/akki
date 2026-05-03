@@ -1,0 +1,103 @@
+---
+import { regionPulses } from '~/data/data-nexus';
+---
+
+<div
+  class="global-pulse rounded-[2rem] border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-white/5 lg:p-6"
+  data-global-pulse
+>
+  <div class="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+    <div class="relative min-h-[24rem] overflow-hidden rounded-[1.5rem] bg-slate-950">
+      <canvas class="h-full min-h-[24rem] w-full" data-global-pulse-canvas aria-label="Interactive 3D global data pulse"
+      ></canvas>
+      <div
+        class="pulse-fallback absolute inset-0 hidden place-items-center p-6 text-center text-slate-200"
+        data-global-pulse-fallback
+      >
+        <div>
+          <p class="text-lg font-bold">WebGL fallback</p>
+          <p class="mt-2 text-sm leading-6 text-slate-300">
+            Use the regional cards to explore data pressure, infrastructure, and governance signals.
+          </p>
+        </div>
+      </div>
+      <div
+        class="pulse-tooltip pointer-events-none absolute left-4 top-4 max-w-xs rounded-2xl border border-white/10 bg-slate-950/90 p-4 text-sm text-white opacity-0 shadow-2xl backdrop-blur"
+        data-global-pulse-tooltip
+        aria-hidden="true"
+      >
+      </div>
+      <div
+        class="absolute bottom-4 left-4 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-teal-100 backdrop-blur"
+      >
+        Drag the globe. Select a region.
+      </div>
+    </div>
+
+    <div>
+      <div class="flex items-center justify-between gap-4">
+        <div>
+          <h3 class="text-2xl font-bold text-slate-950 dark:text-white">Global Data Pulse</h3>
+          <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+            Regional examples link infrastructure choices to privacy and regulatory pressure.
+          </p>
+        </div>
+      </div>
+
+      <script is:inline type="application/json" data-pulse-regions set:html={JSON.stringify(regionPulses)} />
+
+      <div class="mt-6 grid gap-3" role="list" aria-label="Global data pulse regions">
+        {
+          regionPulses.map((region) => (
+            <button
+              type="button"
+              class="pulse-region rounded-2xl border border-slate-200 bg-slate-50 p-4 text-left transition hover:-translate-y-0.5 hover:border-teal-300 hover:bg-teal-50 focus:outline-none focus:ring-2 focus:ring-teal-400 dark:border-white/10 dark:bg-slate-950/50 dark:hover:border-teal-300/70 dark:hover:bg-teal-300/10"
+              data-region-button
+              data-region-id={region.id}
+            >
+              <span class="flex items-center gap-3">
+                <span class="h-3 w-3 rounded-full" style={`background-color: ${region.accent}`} />
+                <span class="font-semibold text-slate-950 dark:text-white">{region.name}</span>
+              </span>
+              <span class="mt-2 block text-sm leading-6 text-slate-600 dark:text-slate-300">{region.pressure}</span>
+            </button>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { initGlobalDataPulse } from '~/scripts/data-nexus/global-data-pulse';
+
+  document.addEventListener('astro:page-load', initGlobalDataPulse);
+</script>
+
+<style>
+  .global-pulse .pulse-region.is-active {
+    border-color: rgb(20 184 166 / 0.75);
+    background-color: rgb(204 251 241) !important;
+    box-shadow:
+      inset 0 0 0 1px rgb(20 184 166 / 0.78),
+      0 18px 54px rgb(20 184 166 / 0.2);
+  }
+
+  .global-pulse .pulse-region.is-active span {
+    color: rgb(15 23 42);
+  }
+
+  :global(.dark) .global-pulse .pulse-region.is-active {
+    background-color: rgb(20 184 166 / 0.18) !important;
+  }
+
+  :global(.dark) .global-pulse .pulse-region.is-active span {
+    color: rgb(240 253 250);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .global-pulse .pulse-region {
+      transition: none;
+    }
+  }
+</style>

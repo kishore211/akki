@@ -1,0 +1,151 @@
+---
+const serverFarmImage = 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1800&q=80';
+const edgeGridImage = 'https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=1800&q=80';
+---
+
+<div
+  class="evolution-slider rounded-[2rem] border border-white/10 bg-white/6 p-4 shadow-2xl shadow-black/20 lg:p-6"
+  data-evolution-slider
+  style="--position: 52%;"
+>
+  <div class="grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+    <div class="slider-frame relative aspect-[16/10] overflow-hidden rounded-[1.5rem] bg-slate-900">
+      <div
+        class="slider-layer slider-before"
+        style={`background-image: linear-gradient(120deg, rgba(2,6,23,0.24), rgba(15,23,42,0.74)), url('${serverFarmImage}')`}
+      >
+      </div>
+      <div
+        class="slider-layer slider-after"
+        style={`background-image: linear-gradient(120deg, rgba(13,148,136,0.42), rgba(245,158,11,0.26)), url('${edgeGridImage}')`}
+      >
+      </div>
+      <div class="slider-grid"></div>
+      <div class="slider-divider" aria-hidden="true">
+        <span></span>
+      </div>
+      <div
+        class="absolute left-4 top-4 rounded-full bg-slate-950/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-200 backdrop-blur"
+      >
+        2025 server farm
+      </div>
+      <div
+        class="absolute bottom-4 right-4 rounded-full bg-teal-950/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-teal-100 backdrop-blur"
+      >
+        2035 edge grid
+      </div>
+      <input
+        class="slider-input"
+        type="range"
+        min="0"
+        max="100"
+        value="52"
+        aria-label="Compare the current server farm with the 2035 edge grid"
+        data-evolution-slider-input
+      />
+    </div>
+
+    <article>
+      <p class="text-sm font-semibold uppercase tracking-[0.18em] text-amber-200">Evolution slider</p>
+      <h3 class="mt-3 text-3xl font-bold text-white">From centralized heat to distributed intelligence.</h3>
+      <p class="mt-4 text-base leading-7 text-slate-300">
+        Drag or use the arrow keys to reveal how the 2035 model shifts from dense, energy-constrained data centers
+        toward quantum-assisted orchestration and edge-aware compute.
+      </p>
+      <div class="mt-6 grid gap-3 text-sm text-slate-300">
+        <div class="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+          <strong class="text-white">Energy paradox:</strong> efficiency gains can still increase total demand when AI workloads
+          multiply.
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+          <strong class="text-white">Design response:</strong> orchestrate renewable grids, local inference, and workload
+          placement as one system.
+        </div>
+      </div>
+    </article>
+  </div>
+</div>
+
+<script>
+  import { initEvolutionSliders } from '~/scripts/data-nexus/evolution-slider';
+
+  document.addEventListener('astro:page-load', initEvolutionSliders);
+</script>
+
+<style>
+  .evolution-slider .slider-layer {
+    position: absolute;
+    inset: 0;
+    background-position: center;
+    background-size: cover;
+  }
+
+  .evolution-slider .slider-after {
+    clip-path: polygon(0 0, var(--position) 0, var(--position) 100%, 0 100%);
+  }
+
+  .evolution-slider .slider-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(90deg, rgb(255 255 255 / 0.12) 1px, transparent 1px),
+      linear-gradient(rgb(255 255 255 / 0.1) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mix-blend-mode: screen;
+    opacity: 0.55;
+  }
+
+  .evolution-slider .slider-divider {
+    position: absolute;
+    bottom: 0;
+    left: var(--position);
+    top: 0;
+    width: 3px;
+    transform: translateX(-50%);
+    background: rgb(255 255 255 / 0.88);
+  }
+
+  .evolution-slider .slider-divider span {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    display: block;
+    height: 3.25rem;
+    width: 3.25rem;
+    transform: translate(-50%, -50%);
+    border-radius: 999px;
+    border: 1px solid rgb(255 255 255 / 0.6);
+    background: rgb(15 23 42 / 0.85);
+    box-shadow: 0 20px 60px rgb(0 0 0 / 0.35);
+  }
+
+  .evolution-slider .slider-divider span::before,
+  .evolution-slider .slider-divider span::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    height: 0.65rem;
+    width: 0.65rem;
+    border-left: 2px solid white;
+    border-bottom: 2px solid white;
+  }
+
+  .evolution-slider .slider-divider span::before {
+    left: 0.95rem;
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  .evolution-slider .slider-divider span::after {
+    right: 0.95rem;
+    transform: translateY(-50%) rotate(-135deg);
+  }
+
+  .evolution-slider .slider-input {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    cursor: ew-resize;
+    opacity: 0;
+  }
+</style>

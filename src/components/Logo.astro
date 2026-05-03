@@ -3,7 +3,11 @@ import { SITE } from 'astrowind:config';
 ---
 
 <span
-  class="self-center ml-2 rtl:ml-0 rtl:mr-2 text-2xl md:text-xl font-bold text-gray-900 whitespace-nowrap dark:text-white"
+  class="self-center ml-2 inline-flex items-center gap-2 whitespace-nowrap text-xl font-bold text-slate-950 rtl:ml-0 rtl:mr-2 dark:text-white"
 >
-  🚀 {SITE?.name}
+  <span
+    class="grid h-7 w-7 place-items-center rounded-xl bg-slate-950 text-xs font-black text-teal-300 dark:bg-white dark:text-slate-950"
+    >DN</span
+  >
+  <span class="hidden sm:inline">{SITE?.name}</span>
 </span>

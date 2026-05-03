@@ -1,0 +1,80 @@
+---
+import { dilemmaChoices } from '~/data/data-nexus';
+---
+
+<div
+  class="dilemma-simulator rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5 lg:p-8"
+  data-dilemma-simulator
+>
+  <div class="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.18em] text-rose-600 dark:text-rose-300">
+        Dilemma simulator
+      </p>
+      <h3 class="mt-3 text-3xl font-bold text-slate-950 dark:text-white">The biometric health signal</h3>
+      <p class="mt-4 text-base leading-7 text-slate-600 dark:text-slate-300">
+        Your autonomous warehouse AI predicts a user may soon experience a severe health crisis from encrypted wearable
+        data. You can act, hold, or verify without revealing the raw signal.
+      </p>
+    </div>
+
+    <div class="grid gap-3" role="group" aria-label="Choose a response to the biometric health signal">
+      {
+        dilemmaChoices.map((choice) => (
+          <button
+            type="button"
+            class="choice-card rounded-2xl border border-slate-200 bg-slate-50 p-5 text-left transition hover:-translate-y-0.5 hover:border-rose-300 hover:bg-rose-50 focus:outline-none focus:ring-2 focus:ring-rose-400 dark:border-white/10 dark:bg-slate-950/50 dark:hover:border-rose-300/70 dark:hover:bg-rose-300/10"
+            data-dilemma-choice={choice.id}
+            data-outcome-title={choice.outcomeTitle}
+            data-outcome={choice.outcome}
+            data-impact={JSON.stringify(choice.impact)}
+          >
+            <span class="block text-lg font-bold text-slate-950 dark:text-white">{choice.label}</span>
+            <span class="mt-2 block text-sm leading-6 text-slate-600 dark:text-slate-300">{choice.stance}</span>
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <div
+    class="mt-8 rounded-3xl border border-slate-200 bg-slate-100 p-6 dark:border-white/10 dark:bg-slate-950/60"
+    aria-live="polite"
+    data-dilemma-result
+  >
+    <p class="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+      Selected consequence
+    </p>
+    <h4 class="mt-3 text-2xl font-bold text-slate-950 dark:text-white" data-dilemma-result-title>
+      Choose a path to reveal the fallout.
+    </h4>
+    <p class="mt-3 text-base leading-7 text-slate-600 dark:text-slate-300" data-dilemma-result-body>
+      The simulator keeps the PRD's moral question in the interface instead of leaving it as a paragraph in the report.
+    </p>
+    <ul class="mt-5 grid gap-2 sm:grid-cols-3" data-dilemma-impact></ul>
+    <button
+      type="button"
+      class="mt-6 hidden rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-white focus:outline-none focus:ring-2 focus:ring-rose-400 dark:border-white/15 dark:text-slate-200 dark:hover:bg-white/10"
+      data-dilemma-reset
+    >
+      Reset choice
+    </button>
+  </div>
+</div>
+
+<script>
+  import { initDilemmaSimulators } from '~/scripts/data-nexus/dilemma-simulator';
+
+  document.addEventListener('astro:page-load', initDilemmaSimulators);
+</script>
+
+<style>
+  .dilemma-simulator .choice-card.is-active {
+    border-color: rgb(244 63 94 / 0.72);
+    background: rgb(255 241 242);
+  }
+
+  :global(.dark) .dilemma-simulator .choice-card.is-active {
+    background: rgb(244 63 94 / 0.14);
+  }
+</style>

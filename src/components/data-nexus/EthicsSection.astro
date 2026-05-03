@@ -1,0 +1,31 @@
+---
+import { Icon } from 'astro-icon/components';
+import SectionShell from './SectionShell.astro';
+import DilemmaSimulator from './DilemmaSimulator.astro';
+import { ethicsCards } from '~/data/data-nexus';
+---
+
+<SectionShell
+  id="ethics"
+  eyebrow="Ethical threshold"
+  title="The warehouse now sees the body, the bias, and the synthetic record."
+  subtitle="The future of mining is not only faster pattern discovery. It is the power to infer health, identity, intent, and credibility before people can defend their own context."
+>
+  <div class="grid gap-6 lg:grid-cols-3">
+    {
+      ethicsCards.map((card) => (
+        <article class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-white/5">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-100 text-rose-700 dark:bg-rose-400/15 dark:text-rose-200">
+            <Icon name={card.icon} class="h-6 w-6" />
+          </div>
+          <h3 class="mt-6 text-xl font-bold text-slate-950 dark:text-white">{card.title}</h3>
+          <p class="mt-3 text-base leading-7 text-slate-600 dark:text-slate-300">{card.body}</p>
+        </article>
+      ))
+    }
+  </div>
+
+  <div class="mt-12" id="dilemma">
+    <DilemmaSimulator />
+  </div>
+</SectionShell>

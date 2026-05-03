@@ -1,0 +1,35 @@
+---
+import { Icon } from 'astro-icon/components';
+import SectionShell from './SectionShell.astro';
+import EvolutionSlider from './EvolutionSlider.astro';
+import { futureSignals } from '~/data/data-nexus';
+---
+
+<SectionShell
+  id="future"
+  eyebrow="2035 projection"
+  title="Autonomous systems inherit the infrastructure layer."
+  subtitle="By 2035, data management shifts from manual administration to AI-guided orchestration, but the energy curve forces a new sustainability contract."
+  tone="dark"
+>
+  <div class="grid gap-6 lg:grid-cols-3">
+    {
+      futureSignals.map((signal) => (
+        <article class="rounded-3xl border border-white/10 bg-white/6 p-6 shadow-xl shadow-black/10">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-300/15 text-amber-200">
+            <Icon name={signal.icon} class="h-6 w-6" />
+          </div>
+          <h3 class="mt-6 text-xl font-bold text-white">{signal.title}</h3>
+          <p class="mt-3 text-base leading-7 text-slate-300">{signal.body}</p>
+          {signal.meta && (
+            <p class="mt-5 text-sm font-semibold uppercase tracking-[0.14em] text-teal-200">{signal.meta}</p>
+          )}
+        </article>
+      ))
+    }
+  </div>
+
+  <div class="mt-12">
+    <EvolutionSlider />
+  </div>
+</SectionShell>
