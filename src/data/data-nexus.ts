@@ -333,3 +333,21 @@ export const sourceLinks = [
     href: 'https://campus.kennesaw.edu/colleges-departments/coles/events/showcase/index.php',
   },
 ];
+
+export const reflectiveItems: FeatureCard[] = [
+  {
+    title: 'Justification of medium',
+    body: 'The interactive website format replaces passive slide decks, deliberately matching the decentralized, dynamic nature of the data ecosystems being taught.',
+    icon: 'tabler:browser',
+  },
+  {
+    title: 'Navigating technical obstacles',
+    body: 'Translating homomorphic encryption math into CSS animations and avoiding WebGL layout thrashing required strict performance budgets.',
+    icon: 'tabler:code',
+  },
+  {
+    title: 'Institutional compliance',
+    body: 'Innovative algorithms and methodologies are documented for the Office of Intellectual Property Development prior to digital archiving.',
+    icon: 'tabler:file-certificate',
+  },
+];

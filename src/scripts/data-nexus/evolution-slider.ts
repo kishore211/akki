@@ -20,8 +20,8 @@ export const initEvolutionSliders = () => {
     const readout = root.querySelector<HTMLElement>('[data-evolution-readout]');
     const metrics = Array.from(root.querySelectorAll<HTMLElement>('[data-lab-metric]'));
     const hotspots = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-hotspot]'));
-    const hotspotTitle = root.querySelector<HTMLElement>('[data-hotspot-title]');
-    const hotspotBody = root.querySelector<HTMLElement>('[data-hotspot-body]');
+    const hotspotTitle = root.querySelector<HTMLElement>('[data-hotspot-title-output]');
+    const hotspotBody = root.querySelector<HTMLElement>('[data-hotspot-body-output]');
     if (!input) return;
 
     root.dataset.evolutionReady = 'true';

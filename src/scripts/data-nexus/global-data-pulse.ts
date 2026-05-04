@@ -397,19 +397,7 @@ const bootGlobalDataPulse = async (root: HTMLElement) => {
       new THREE.SphereGeometry(2.018, 64, 64),
       new THREE.MeshBasicMaterial({ color: 0xbfdbfe, wireframe: true, transparent: true, opacity: 0.1 })
     );
-    const atmosphere = new THREE.Mesh(
-      new THREE.SphereGeometry(2.3, 96, 96),
-      new THREE.MeshBasicMaterial({
-        color: 0x38bdf8,
-        transparent: true,
-        opacity: 0.16,
-        side: THREE.BackSide,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-      })
-    );
-
-    group.add(globe, clouds, wire, atmosphere);
+    group.add(globe, clouds, wire);
     scene.add(new THREE.HemisphereLight(0xdbeafe, 0x020617, 1.45));
 
     const keyLight = new THREE.DirectionalLight(0xffffff, 2.1);
